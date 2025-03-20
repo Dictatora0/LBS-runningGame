@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比赛管理系统</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); }
+        input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        button { margin-top: 10px; padding: 8px 15px; border: none; background-color: #007BFF; color: white; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background-color: #0056b3; }
+        h2, h3 { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>比赛管理系统</h2>
+
+        <div class="section">
+            <h3>创建比赛</h3>
+            <label>检查点 (格式: x,y;x,y;x,y)：</label>
+            <input type="text" id="checkpoints" placeholder="例如: 1,1;2,2;3,3">
+            <button onclick="createGame()">创建</button>
+            <p id="gameResult"></p>
+        </div>
+
+        <div class="section">
+            <h3>添加运动员</h3>
+            <label>比赛 ID：</label>
+            <input type="number" id="game_id">
+            <label>运动员 ID：</label>
+            <input type="number" id="player_id">
+            <label>初始位置 (x, y)：</label>
+            <input type="text" id="player_position" placeholder="例如: 0,0">
+            <button onclick="addPlayer()">添加</button>
+            <p id="playerResult"></p>
+        </div>
+
+        <div class="section">
+            <h3>提交位置</h3>
+            <label>比赛 ID：</label>
+            <input type="number" id="update_game_id">
+            <label>运动员 ID：</label>
+            <input type="number" id="update_player_id">
+            <label>新位置 (x, y)：</label>
+            <input type="text" id="update_position" placeholder="例如: 5,5">
+            <button onclick="updateLocation()">提交</button>
+            <p id="updateResult"></p>
+        </div>
+
+        <div class="section">
+            <h3>查询比赛状态</h3>
+            <label>比赛 ID：</label>
+            <input type="number" id="status_game_id">
+            <button onclick="getGameStatus()">查询</button>
+            <p id="statusResult"></p>
+        </div>
+
+        <div class="section">
+            <h3>获取检查点信息</h3>
+            <label>比赛 ID：</label>
+            <input type="number" id="checkpoint_game_id">
+            <button onclick="getCheckpoints()">查询</button>
+            <p id="checkpointResult"></p>
+        </div>
+
+        <div class="section">
+            <h3>删除比赛</h3>
+            <label>比赛 ID：</label>
+            <input type="number" id="delete_game_id">
+            <button onclick="deleteGame()">删除</button>
+            <p id="deleteResult"></p>
+        </div>
+    </div>
+
+    <script>
+        function createGame() {
+            let checkpointStr = $("#checkpoints").val();
+            let checkpoints = checkpointStr.split(";").map(item => {
+                let [x, y] = item.split(",").map(Number);
+                return {x, y};
+            });
+
+            $.ajax({
+                url: "/games",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({checkpoints}),
+                success: function(response) {
+                    $("#gameResult").text("比赛创建成功，ID：" + response.game_id);
+                },
+                error: function(xhr) {
+                    $("#gameResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+
+        function addPlayer() {
+            let gameId = $("#game_id").val();
+            let playerId = $("#player_id").val();
+            let [x, y] = $("#player_position").val().split(",").map(Number);
+
+            $.ajax({
+                url: `/games/${gameId}/players`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ player_id: playerId, x, y }),
+                success: function(response) {
+                    $("#playerResult").text(response.message);
+                },
+                error: function(xhr) {
+                    $("#playerResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+
+        function updateLocation() {
+            let gameId = $("#update_game_id").val();
+            let playerId = $("#update_player_id").val();
+            let [x, y] = $("#update_position").val().split(",").map(Number);
+
+            $.ajax({
+                url: `/games/${gameId}/players/${playerId}/location`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ x, y }),
+                success: function(response) {
+                    $("#updateResult").text(response.message);
+                },
+                error: function(xhr) {
+                    $("#updateResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+
+        function getGameStatus() {
+            let gameId = $("#status_game_id").val();
+
+            $.ajax({
+                url: `/games/${gameId}/status`,
+                type: "GET",
+                success: function(response) {
+                    let resultText = `状态: ${response.status}`;
+                    if (response.status === "已结束") {
+                        resultText += ` | 冠军: ${response.champion}, 亚军: ${response.runner_up}, 季军: ${response.third_place}`;
+                    }
+                    $("#statusResult").text(resultText);
+                },
+                error: function(xhr) {
+                    $("#statusResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+
+        function getCheckpoints() {
+            let gameId = $("#checkpoint_game_id").val();
+
+            $.ajax({
+                url: `/games/${gameId}/checkpoints`,
+                type: "GET",
+                success: function(response) {
+                    let checkpointText = `状态: ${response.status} | 检查点: ` + response.checkpoints.map(cp => `(${cp.x}, ${cp.y})`).join(", ");
+                    $("#checkpointResult").text(checkpointText);
+                },
+                error: function(xhr) {
+                    $("#checkpointResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+
+        function deleteGame() {
+            let gameId = $("#delete_game_id").val();
+
+            $.ajax({
+                url: `/games/${gameId}`,
+                type: "DELETE",
+                success: function(response) {
+                    $("#deleteResult").text(response.message);
+                },
+                error: function(xhr) {
+                    $("#deleteResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
