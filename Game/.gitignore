@@ -1,0 +1,32 @@
+# Python 缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 虚拟环境
+venv/
+.venv/
+
+# 包管理工具生成的文件
+Pipfile
+Pipfile.lock
+*.egg-info/
+
+# 日志文件
+*.log
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# IDE/编辑器配置文件
+.vscode/
+.idea/
+
+# Flask 特定
+instance/
+.webassets-cache
+
+# 如果你在项目中使用了 Jupyter Notebook，也可以忽略以下文件：
+.ipynb_checkpoints/
