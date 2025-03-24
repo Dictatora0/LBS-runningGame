@@ -187,13 +187,87 @@ python /Users/lifulin/Desktop/running_game_api/Game/app.py
 python /Users/lifulin/Desktop/client_test.py
 ```
 
-也可以使用 Postman/Web 页面测试。
-
 ---
 
 **六、测试截图/演示页面**
 
+== 创建比赛 ==
+返回： {
+  "game_id": 4,
+  "message": "Game created successfully"
+}
 
+== 添加运动员 101 ==
+返回： {
+  "message": "Player added successfully"
+}
+
+== 添加运动员 102 ==
+返回： {
+  "message": "Player added successfully"
+}
+
+== 添加运动员 103 ==
+返回： {
+  "message": "Player added successfully"
+}
+
+== 提交位置 (player 101 @ 5.0,5.0) ==
+返回： {
+  "message": "Location updated successfully"
+}
+
+== 提交位置 (player 101 @ 10.0,10.0) ==
+返回： {
+  "message": "Location updated successfully"
+}
+
+== 提交位置 (player 102 @ 5.0,5.0) ==
+返回： {
+  "message": "Location updated successfully"
+}
+
+== 提交位置 (player 102 @ 10.0,10.0) ==
+返回： {
+  "message": "Location updated successfully"
+}
+
+== 提交位置 (player 103 @ 5.0,5.0) ==
+返回： {
+  "message": "Location updated successfully"
+}
+
+== 提交位置 (player 103 @ 10.0,10.0) ==
+返回： {
+  "message": "Location updated successfully"
+}
+
+== 查询检查点 ==
+返回： {
+  "checkpoints": [
+    {
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "x": 5.0,
+      "y": 5.0
+    },
+    {
+      "x": 10.0,
+      "y": 10.0
+    }
+  ],
+  "status": "\u672a\u7ed3\u675f"
+}
+
+== 查询比赛状态 ==
+返回： {
+  "champion": null,
+  "runner_up": null,
+  "status": "\u672a\u7ed3\u675f",
+  "third_place": null
+}
 ---
 
 **七、功能实现情况说明**
