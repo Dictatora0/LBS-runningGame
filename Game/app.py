@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import math
 from sqlalchemy.exc import SQLAlchemyError
 from threading import Lock
+import pymysql
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:12345678@localhost/lbsApi'

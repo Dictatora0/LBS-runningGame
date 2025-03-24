@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>比赛管理系统</title>
+    <title>跑步比赛管理系统</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
         .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); }
         input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
         button { margin-top: 10px; padding: 8px 15px; border: none; background-color: #007BFF; color: white; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
         button:hover { background-color: #0056b3; }
         h2, h3 { text-align: center; }
+        #status, #leaderboard { margin-top: 20px; border: 1px solid #ccc; padding: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: center; }
+        th { background-color: #f4f4f4; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>比赛管理系统</h2>
+        <h2>跑步比赛管理系统</h2>
 
+        <!-- 创建比赛 -->
         <div class="section">
             <h3>创建比赛</h3>
             <label>检查点 (格式: x,y;x,y;x,y)：</label>
@@ -27,6 +32,7 @@
             <p id="gameResult"></p>
         </div>
 
+        <!-- 添加运动员 -->
         <div class="section">
             <h3>添加运动员</h3>
             <label>比赛 ID：</label>
@@ -39,6 +45,7 @@
             <p id="playerResult"></p>
         </div>
 
+        <!-- 提交位置 -->
         <div class="section">
             <h3>提交位置</h3>
             <label>比赛 ID：</label>
@@ -51,6 +58,7 @@
             <p id="updateResult"></p>
         </div>
 
+        <!-- 查询比赛状态 -->
         <div class="section">
             <h3>查询比赛状态</h3>
             <label>比赛 ID：</label>
@@ -59,6 +67,7 @@
             <p id="statusResult"></p>
         </div>
 
+        <!-- 获取检查点信息 -->
         <div class="section">
             <h3>获取检查点信息</h3>
             <label>比赛 ID：</label>
@@ -67,6 +76,7 @@
             <p id="checkpointResult"></p>
         </div>
 
+        <!-- 删除比赛 -->
         <div class="section">
             <h3>删除比赛</h3>
             <label>比赛 ID：</label>
@@ -74,9 +84,33 @@
             <button onclick="deleteGame()">删除</button>
             <p id="deleteResult"></p>
         </div>
+
+        <!-- 比赛状态 -->
+        <div id="status">
+            <h2>比赛状态</h2>
+            <pre id="status-info">等待比赛数据...</pre>
+        </div>
+
+        <!-- 排行榜 -->
+        <div id="leaderboard">
+            <h2>排行榜</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>运动员ID</th>
+                        <th>当前位置</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr><td colspan="2">等待数据...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
+        const BASE_URL = "http://localhost:5000";
+
         function createGame() {
             let checkpointStr = $("#checkpoints").val();
             let checkpoints = checkpointStr.split(";").map(item => {
@@ -182,6 +216,30 @@
                 },
                 error: function(xhr) {
                     $("#deleteResult").text("错误：" + xhr.responseJSON.error);
+                }
+            });
+        }
+
+        function getLeaderboard() {
+            let gameId = $("#status_game_id").val();
+
+            $.ajax({
+                url: `/games/${gameId}/status`,
+                type: "GET",
+                success: function(response) {
+                    const leaderboard = response.players || [];
+                    const tbody = document.getElementById('leaderboard-body');
+                    tbody.innerHTML = ''; // 清空表格内容
+
+                    leaderboard.forEach(player => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${player.player_id}</td><td>(${player.x}, ${player.y})</td>`;
+                        tbody.appendChild(row);
+                    });
+                },
+                error: function(xhr) {
+                    const tbody = document.getElementById('leaderboard-body');
+                    tbody.innerHTML = '<tr><td colspan="2">获取排行榜失败: ' + xhr.responseJSON.error + '</td></tr>';
                 }
             });
         }
