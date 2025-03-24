@@ -1,4 +1,4 @@
----
+
 
 **作业说明文档**
 
@@ -6,7 +6,6 @@
 
 本项目是一个模拟“定向跑步夺冠”比赛的 Web API 系统，基于 Flask 和 SQLAlchemy 实现，使用 MySQL 作为后端数据库。支持创建多个比赛、添加运动员、提交实时位置、判断比赛结果、查询状态等功能。
 
----
 
 **二、使用技术栈**
 
@@ -193,23 +192,6 @@ python /Users/lifulin/Desktop/client_test.py
 ---
 
 **六、测试截图/演示页面**
-
-
-
-![截屏2025-03-25 00.22.28.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_fm8sEE/截屏2025-03-25%2000.22.28.png)
-
-![截屏2025-03-25 00.20.41.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_wMhuIg/截屏2025-03-25%2000.20.41.png)
-
-![截屏2025-03-25 00.20.57.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_V0VBS7/截屏2025-03-25%2000.20.57.png)
-
-![截屏2025-03-25 00.21.07.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_Go2QZn/截屏2025-03-25%2000.21.07.png)
-
-![截屏2025-03-25 00.39.06.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_n37D0o/截屏2025-03-25%2000.39.06.png)
-
-![截屏2025-03-25 00.40.14.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_PMcfdV/截屏2025-03-25%2000.40.14.png)
-
-![截屏2025-03-25 00.40.25.png](/var/folders/_h/mf3tfz6x7wv3t2ddn9tf7tch0000gn/T/TemporaryItems/NSIRD_screencaptureui_JRdcFt/截屏2025-03-25%2000.40.25.png)
-
 
 
 ---
